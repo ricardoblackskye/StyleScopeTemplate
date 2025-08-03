@@ -164,9 +164,9 @@ export default function CameraScreen() {
         );
       }
       return (
-        <ThemedText key={index} style={styles.contentText}>
+        <Text key={index} style={styles.contentText}>
           {line}
-        </ThemedText>
+        </Text>
       );
     });
   };
