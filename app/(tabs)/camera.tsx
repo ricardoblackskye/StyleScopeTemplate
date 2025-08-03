@@ -160,27 +160,39 @@ export default function CameraScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
-        <View style={styles.cameraControls}>
-          <TouchableOpacity style={styles.controlButton} onPress={toggleCameraFacing}>
-            <IconSymbol name="chevron.right" size={24} color="white" />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
-            <View style={styles.captureButtonInner} />
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.controlButton} onPress={pickImage}>
-            <ThemedText style={styles.controlButtonText}>Gallery</ThemedText>
-          </TouchableOpacity>
-        </View>
-      </CameraView>
-      
-      <View style={styles.instructionsContainer}>
-        <ThemedText style={styles.instructions}>
-          Point your camera at a room and tap the capture button, or select an image from your gallery
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ThemedText type="title" style={styles.screenTitle}>
+          Room Style Analysis
         </ThemedText>
-      </View>
+        
+        <ThemedView style={styles.cameraContainer}>
+          <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
+            <View style={styles.cameraControls}>
+              <TouchableOpacity style={styles.controlButton} onPress={toggleCameraFacing}>
+                <IconSymbol name="chevron.right" size={24} color="white" />
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+                <View style={styles.captureButtonInner} />
+              </TouchableOpacity>
+            </View>
+          </CameraView>
+        </ThemedView>
+        
+        <ThemedText style={styles.instructions}>
+          Point your camera at a room and tap the capture button
+        </ThemedText>
+        
+        <ThemedView style={styles.uploadSection}>
+          <ThemedText type="subtitle" style={styles.uploadTitle}>
+            Or Upload from Gallery
+          </ThemedText>
+          <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
+            <IconSymbol name="photo" size={24} color="white" />
+            <ThemedText style={styles.uploadButtonText}>Select Photo</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+      </ScrollView>
     </ThemedView>
   );
 }
@@ -189,12 +201,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContainer: {
+    flexGrow: 1,
+    padding: 20,
+  },
+  screenTitle: {
+    textAlign: 'center',
+    marginBottom: 20,
+  },
   message: {
     textAlign: 'center',
     paddingBottom: 10,
   },
+  cameraContainer: {
+    borderRadius: 15,
+    overflow: 'hidden',
+    marginBottom: 15,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
   camera: {
-    flex: 1,
+    height: 300,
   },
   cameraControls: {
     flex: 1,
@@ -230,6 +263,37 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     backgroundColor: '#007AFF',
   },
+  instructions: {
+    textAlign: 'center',
+    fontSize: 14,
+    marginBottom: 30,
+    opacity: 0.8,
+  },
+  uploadSection: {
+    alignItems: 'center',
+    padding: 20,
+    borderRadius: 15,
+    borderWidth: 2,
+    borderColor: '#007AFF',
+    borderStyle: 'dashed',
+  },
+  uploadTitle: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  uploadButton: {
+    backgroundColor: '#007AFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 10,
+    gap: 10,
+  },
+  uploadButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   button: {
     backgroundColor: '#007AFF',
     padding: 15,
@@ -241,15 +305,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  instructionsContainer: {
-    padding: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-  },
-  instructions: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 14,
   },
   analysisContainer: {
     flex: 1,
