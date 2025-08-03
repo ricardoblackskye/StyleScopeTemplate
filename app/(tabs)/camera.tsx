@@ -484,14 +484,11 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   subheading: {
-    color: '#061e2e',
-    fontSize: 10,
+    color: '#FF0000',
+    fontSize: 14,
     fontWeight: 'normal',
     marginBottom: 5,
     lineHeight: 20,
-    // Force the color to apply
-    textDecorationColor: '#FF0000',
-    shadowColor: '#FF0000',
   },
   contentText: {
     color: '#555',
