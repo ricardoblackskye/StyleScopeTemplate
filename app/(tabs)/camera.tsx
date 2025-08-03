@@ -6,7 +6,8 @@ import {
   Alert, 
   TouchableOpacity, 
   ScrollView,
-  ActivityIndicator 
+  ActivityIndicator,
+  Modal 
 } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -22,6 +23,7 @@ export default function CameraScreen() {
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const cameraRef = useRef<CameraView>(null);
 
   // Initialize Gemini AI (you'll need to add your API key in secrets)
@@ -111,6 +113,7 @@ export default function CameraScreen() {
       const result = await model.generateContent([prompt, imagePart]);
       const response = await result.response;
       setAnalysis(response.text());
+      setShowModal(true);
     } catch (error) {
       console.error('Error analyzing image:', error);
       Alert.alert('Error', 'Failed to analyze room. Please try again.');
@@ -126,9 +129,48 @@ export default function CameraScreen() {
   const resetAnalysis = () => {
     setCapturedImage(null);
     setAnalysis('');
+    setShowModal(false);
   };
 
-  if (capturedImage) {
+  const formatAnalysisText = (text: string) => {
+    const sections = text.split(/\*\*(\d+\.\s*[^:]+:)\*\*/).filter(Boolean);
+    const formattedSections = [];
+    
+    for (let i = 0; i < sections.length; i += 2) {
+      const heading = sections[i];
+      const content = sections[i + 1] || '';
+      
+      if (heading && content) {
+        formattedSections.push({
+          heading: heading.replace(/^\d+\.\s*/, ''),
+          content: content.trim()
+        });
+      }
+    }
+    
+    return formattedSections;
+  };
+
+  const renderFormattedContent = (content: string) => {
+    const lines = content.split('\n').filter(line => line.trim());
+    return lines.map((line, index) => {
+      const isSubheading = line.trim().startsWith('*');
+      if (isSubheading) {
+        return (
+          <ThemedText key={index} style={styles.subheading}>
+            {line.replace(/^\*\s*/, '• ')}
+          </ThemedText>
+        );
+      }
+      return (
+        <ThemedText key={index} style={styles.contentText}>
+          {line}
+        </ThemedText>
+      );
+    });
+  };
+
+  if (capturedImage && !showModal) {
     return (
       <ThemedView style={styles.container}>
         <ScrollView style={styles.analysisContainer}>
@@ -138,13 +180,6 @@ export default function CameraScreen() {
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#007AFF" />
               <ThemedText style={styles.loadingText}>Analyzing room...</ThemedText>
-            </View>
-          ) : analysis ? (
-            <View style={styles.resultContainer}>
-              <ThemedText type="subtitle" style={styles.analysisTitle}>
-                Room Style Analysis
-              </ThemedText>
-              <ThemedText style={styles.analysisText}>{analysis}</ThemedText>
             </View>
           ) : (
             <View style={styles.loadingContainer}>
@@ -198,6 +233,54 @@ export default function CameraScreen() {
           </TouchableOpacity>
         </ThemedView>
       </ScrollView>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => setShowModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <ThemedText type="title" style={styles.modalTitle}>
+                Room Style Analysis
+              </ThemedText>
+              <TouchableOpacity 
+                style={styles.closeButton} 
+                onPress={() => setShowModal(false)}
+              >
+                <IconSymbol name="xmark" size={24} color="#666" />
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView style={styles.modalContent}>
+              {analysis ? formatAnalysisText(analysis).map((section, index) => (
+                <View key={index} style={styles.analysisSection}>
+                  <ThemedText type="subtitle" style={styles.sectionHeading}>
+                    {section.heading}
+                  </ThemedText>
+                  <View style={styles.sectionContent}>
+                    {renderFormattedContent(section.content)}
+                  </View>
+                </View>
+              )) : null}
+            </ScrollView>
+            
+            <View style={styles.modalActions}>
+              <TouchableOpacity 
+                style={styles.button} 
+                onPress={() => {
+                  setShowModal(false);
+                  resetAnalysis();
+                }}
+              >
+                <ThemedText style={styles.buttonText}>Take Another Photo</ThemedText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ThemedView>
   );
 }
@@ -344,5 +427,81 @@ const styles = StyleSheet.create({
   actionButtons: {
     marginTop: 20,
     marginBottom: 40,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 0,
+    margin: 20,
+    maxHeight: '80%',
+    width: '90%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  modalTitle: {
+    flex: 1,
+    textAlign: 'center',
+    color: '#333',
+  },
+  closeButton: {
+    padding: 5,
+  },
+  modalContent: {
+    flex: 1,
+    padding: 20,
+  },
+  analysisSection: {
+    marginBottom: 25,
+  },
+  sectionHeading: {
+    color: '#007AFF',
+    marginBottom: 10,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  sectionContent: {
+    paddingLeft: 10,
+  },
+  subheading: {
+    color: '#333',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 5,
+    backgroundColor: '#f0f8ff',
+    padding: 8,
+    borderRadius: 5,
+    borderLeftWidth: 3,
+    borderLeftColor: '#007AFF',
+  },
+  contentText: {
+    color: '#555',
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 5,
+  },
+  modalActions: {
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
   },
 });
