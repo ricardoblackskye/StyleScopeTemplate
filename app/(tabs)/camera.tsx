@@ -158,7 +158,7 @@ export default function CameraScreen() {
       const isSubheading = line.trim().startsWith('*');
       if (isSubheading) {
         return (
-          <Text key={index} style={styles.subheading}>
+          <Text key={index} style={[styles.subheading, { color: '#FF0000' }]}>
             {line.replace(/^\*\s*/, '• ')}
           </Text>
         );
@@ -489,6 +489,9 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     marginBottom: 5,
     lineHeight: 20,
+    // Force the color to apply
+    textDecorationColor: '#FF0000',
+    shadowColor: '#FF0000',
   },
   contentText: {
     color: '#555',
