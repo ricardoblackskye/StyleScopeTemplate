@@ -146,7 +146,12 @@ export default function CameraScreen() {
               </ThemedText>
               <ThemedText style={styles.analysisText}>{analysis}</ThemedText>
             </View>
-          ) : null}
+          ) : (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#007AFF" />
+              <ThemedText style={styles.loadingText}>Analyzing room...</ThemedText>
+            </View>
+          )}
           
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.button} onPress={resetAnalysis}>
