@@ -7,7 +7,8 @@ import {
   TouchableOpacity, 
   ScrollView,
   ActivityIndicator,
-  Modal 
+  Modal,
+  Text 
 } from 'react-native';
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
@@ -157,9 +158,9 @@ export default function CameraScreen() {
       const isSubheading = line.trim().startsWith('*');
       if (isSubheading) {
         return (
-          <ThemedText key={index} style={styles.subheading}>
+          <Text key={index} style={styles.subheading}>
             {line.replace(/^\*\s*/, '• ')}
-          </ThemedText>
+          </Text>
         );
       }
       return (
