@@ -475,8 +475,8 @@ const styles = StyleSheet.create({
   },
   sectionHeading: {
     color: '#007AFF',
-    marginBottom: 10,
-    fontSize: 18,
+    marginBottom: 15,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   sectionContent: {
@@ -484,14 +484,10 @@ const styles = StyleSheet.create({
   },
   subheading: {
     color: '#333',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 14,
+    fontWeight: 'normal',
     marginBottom: 5,
-    backgroundColor: '#f0f8ff',
-    padding: 8,
-    borderRadius: 5,
-    borderLeftWidth: 3,
-    borderLeftColor: '#007AFF',
+    lineHeight: 20,
   },
   contentText: {
     color: '#555',
