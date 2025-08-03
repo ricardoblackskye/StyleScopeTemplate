@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   subheading: {
-    color: '#333',
+    color: '#000',
     fontSize: 14,
     fontWeight: 'normal',
     marginBottom: 5,
