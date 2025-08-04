@@ -545,9 +545,4 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 5,
   },
-  modalActions: {
-    padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-  },
 });
