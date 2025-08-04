@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { 
   View, 
@@ -92,7 +91,7 @@ export default function CameraScreen() {
     setLoading(true);
     try {
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-      
+
       const prompt = `Analyze this room image and provide detailed style information including:
       1. Overall design style (modern, traditional, minimalist, etc.)
       2. Color palette and scheme
@@ -101,7 +100,7 @@ export default function CameraScreen() {
       5. Room functionality and layout
       6. Design strengths and suggestions for improvement
       7. Estimated room type (living room, bedroom, etc.)
-      
+
       Please be detailed and helpful in your analysis.`;
 
       const imagePart = {
@@ -136,11 +135,11 @@ export default function CameraScreen() {
   const formatAnalysisText = (text: string) => {
     const sections = text.split(/\*\*(\d+\.\s*[^:]+:)\*\*/).filter(Boolean);
     const formattedSections = [];
-    
+
     for (let i = 0; i < sections.length; i += 2) {
       const heading = sections[i];
       const content = sections[i + 1] || '';
-      
+
       if (heading && content) {
         formattedSections.push({
           heading: heading.replace(/^\d+\.\s*/, ''),
@@ -148,7 +147,7 @@ export default function CameraScreen() {
         });
       }
     }
-    
+
     return formattedSections;
   };
 
@@ -176,7 +175,7 @@ export default function CameraScreen() {
       <ThemedView style={styles.container}>
         <ScrollView style={styles.analysisContainer}>
           <Image source={{ uri: capturedImage }} style={styles.capturedImage} />
-          
+
           {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#007AFF" />
@@ -188,7 +187,7 @@ export default function CameraScreen() {
               <ThemedText style={styles.loadingText}>Analyzing room...</ThemedText>
             </View>
           )}
-          
+
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.button} onPress={resetAnalysis}>
               <ThemedText style={styles.buttonText}>Take Another Photo</ThemedText>
@@ -205,25 +204,25 @@ export default function CameraScreen() {
         <ThemedText type="title" style={styles.screenTitle}>
           Room Style Analysis
         </ThemedText>
-        
+
         <ThemedView style={styles.cameraContainer}>
           <CameraView style={styles.camera} facing={facing} ref={cameraRef}>
             <View style={styles.cameraControls}>
               <TouchableOpacity style={styles.controlButton} onPress={toggleCameraFacing}>
                 <IconSymbol name="chevron.right" size={24} color="white" />
               </TouchableOpacity>
-              
+
               <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
                 <View style={styles.captureButtonInner} />
               </TouchableOpacity>
             </View>
           </CameraView>
         </ThemedView>
-        
+
         <ThemedText style={styles.instructions}>
           Point your camera at a room and tap the capture button
         </ThemedText>
-        
+
         <ThemedView style={styles.uploadSection}>
           <ThemedText type="subtitle" style={styles.uploadTitle}>
             Or Upload from Gallery
@@ -254,7 +253,7 @@ export default function CameraScreen() {
                 <IconSymbol name="xmark" size={24} color="#666" />
               </TouchableOpacity>
             </View>
-            
+
             <ScrollView style={styles.modalContent}>
               {analysis ? formatAnalysisText(analysis).map((section, index) => (
                 <View key={index} style={styles.analysisSection}>
@@ -267,7 +266,7 @@ export default function CameraScreen() {
                 </View>
               )) : null}
             </ScrollView>
-            
+
             <View style={styles.modalActions}>
               <TouchableOpacity 
                 style={styles.button} 
@@ -477,8 +476,8 @@ const styles = StyleSheet.create({
   sectionHeading: {
     color: '#061e2e',
     marginBottom: 15,
-    fontSize: 12,
-    fontWeight: 'normal',
+    fontSize: 22,
+    fontWeight: 'bold',
   },
   sectionContent: {
     paddingLeft: 10,
