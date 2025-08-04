@@ -193,16 +193,11 @@ export default function CameraScreen() {
       const missingIndex = formattedSections.length;
       formattedSections.push({
         heading: expectedSections[missingIndex] || `Analysis Point ${missingIndex + 1}`,
-        content: ''
+        content: 'Analysis in progress...'
       });
     }
 
-    // Filter out sections with empty content or "Analysis in progress..." 
-    return formattedSections.filter(section => 
-      section.content && 
-      section.content.trim() !== '' && 
-      section.content.trim() !== 'Analysis in progress...'
-    );
+    return formattedSections;
   };
 
   const renderFormattedContent = (content: string) => {
