@@ -133,19 +133,68 @@ export default function CameraScreen() {
   };
 
   const formatAnalysisText = (text: string) => {
-    const sections = text.split(/\*\*(\d+\.\s*[^:]+:)\*\*/).filter(Boolean);
+    // Try multiple parsing patterns to handle different AI response formats
+    let sections = text.split(/\*\*(\d+\.\s*[^:]+:?)\*\*/).filter(Boolean);
+    
+    // If the above doesn't work, try alternative patterns
+    if (sections.length < 7) {
+      sections = text.split(/(\d+\.\s*[^:\n]+:?)/).filter(line => line.trim());
+    }
+    
+    // If still not enough sections, try splitting by numbered points
+    if (sections.length < 7) {
+      sections = text.split(/(?=\d+\.\s)/).filter(line => line.trim());
+    }
+
     const formattedSections = [];
 
-    for (let i = 0; i < sections.length; i += 2) {
-      const heading = sections[i];
-      const content = sections[i + 1] || '';
-
-      if (heading && content) {
-        formattedSections.push({
-          heading: heading.replace(/^\d+\.\s*/, ''),
-          content: content.trim()
-        });
+    if (sections.length >= 2 && sections[0].match(/^\d+\./)) {
+      // Handle case where sections are already split properly
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i].trim();
+        if (section.match(/^\d+\./)) {
+          const lines = section.split('\n');
+          const heading = lines[0].replace(/^\d+\.\s*/, '').replace(/\*\*/g, '');
+          const content = lines.slice(1).join('\n').trim();
+          
+          formattedSections.push({
+            heading: heading,
+            content: content || 'Analysis in progress...'
+          });
+        }
       }
+    } else {
+      // Handle alternating heading/content pattern
+      for (let i = 0; i < sections.length; i += 2) {
+        const heading = sections[i];
+        const content = sections[i + 1] || 'Analysis in progress...';
+
+        if (heading && heading.trim()) {
+          formattedSections.push({
+            heading: heading.replace(/^\d+\.\s*/, '').replace(/\*\*/g, ''),
+            content: content.trim()
+          });
+        }
+      }
+    }
+
+    // Ensure we have at least 7 sections for all analysis points
+    const expectedSections = [
+      'Overall design style',
+      'Color palette and scheme',
+      'Furniture style and arrangement',
+      'Lighting assessment',
+      'Room functionality and layout',
+      'Design strengths and suggestions',
+      'Estimated room type'
+    ];
+
+    while (formattedSections.length < 7) {
+      const missingIndex = formattedSections.length;
+      formattedSections.push({
+        heading: expectedSections[missingIndex] || `Analysis Point ${missingIndex + 1}`,
+        content: 'Analysis in progress...'
+      });
     }
 
     return formattedSections;
