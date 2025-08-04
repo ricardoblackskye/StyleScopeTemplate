@@ -525,7 +525,7 @@ const styles = StyleSheet.create({
   sectionHeading: {
     color: '#061e2e',
     marginBottom: 15,
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'normal',
   },
   sectionContent: {
