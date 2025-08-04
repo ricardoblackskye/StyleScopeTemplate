@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
     color: '#061e2e',
     marginBottom: 15,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
   },
   sectionContent: {
     paddingLeft: 10,
