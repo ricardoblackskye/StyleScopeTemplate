@@ -540,8 +540,8 @@ const styles = StyleSheet.create({
   },
   contentText: {
     color: '#555',
-    fontSize: 14,
-    fontWeight: 'normal',
+    fontSize: 24,
+    fontWeight: 'bold',
     lineHeight: 20,
     marginBottom: 5,
   },
